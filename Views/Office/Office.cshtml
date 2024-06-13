@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Office";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<head>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+
+<div class="office-page">
+    <div class="container text-center">
+        <h1 class="display-4">Личный кабинет</h1>
+        <p class="username-info">Вы зашли под именем @ViewData["name"]!</p>
+        
+        <form method="post" asp-action="Office" asp-controller="Office" class="card">
+            <div class="card-header">
+                <h2>Написать сообщение:</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <input asp-for="To" class="form-control" name="To" placeholder="Кому" />
+                </div>
+                <div class="form-group">
+                    <input asp-for="Title" class="form-control" name="Title" placeholder="Заголовок" />
+                </div>
+                <div class="form-group">
+                    <textarea asp-for="Text" class="form-control" name="Text" placeholder="Сообщение" ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send</button>
+                @ViewData["Message"]
+            </div>
+        </form>
+
+        <form method="get" asp-action="Office" asp-controller="Office" class="card mt-4">
+            <div class="card-header">
+                <h2>Фильтровать</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group form-check">
+                    <input type="checkbox" name="Status" asp-for="Status" class="form-check-input"/>
+                    <label class="form-check-label control-label">Фильтровать</label>
+                </div>
+                <button type="submit" class="btn btn-secondary">Сохранить</button>
+            </div>
+        </form>
+
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr><th>Тема</th><th>Дата</th><th>От</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="@(item.Status == true ? "seen-true" : "seen-false")">
+                        <td>
+                            <a href="#" data-id="@item.Id" onClick='alert("@item.Text")'>@item.Title</a>
+                        </td>
+                        <td>@item.Date</td>
+                        <td>@item.From</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        let unreadLines = document.querySelectorAll(".seen-false");
+        for (let i = 0; i < unreadLines.length; i++) {
+            unreadLines[i].style.background = 'yellow';
+        }
+
+        let readLines = document.querySelectorAll(".seen-true");
+        for (let i = 0; i < readLines.length; i++) {
+            readLines[i].style.background = 'white';
+        }
+
+        $('table a').click(function (e) {
+            e.preventDefault();
+            var messageId = $(this).attr('data-id');
+            console.log(messageId);
+            $.post('/Office/MarkAsRead/' + messageId, function () {
+                $(this).closest('tr').removeClass('seen-false').addClass('seen-true').css('background-color', 'white');
+            }.bind(this));
+        });
+    });
+</script>
+
+

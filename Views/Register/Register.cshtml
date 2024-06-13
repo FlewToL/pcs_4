@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center bg-primary text-white">
+                    <h2>Регистрация</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="Register" asp-controller="Register">
+                        <div class="form-group mb-3">
+                            <input asp-for="Login" class="form-control" name="Login" id="Login" placeholder="Логин" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <input asp-for="FullName" class="form-control" name="FullName" id="FullName" placeholder="Полное имя" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <input asp-for="Password" class="form-control" type="password" name="Password" id="Password" placeholder="Пароль" />
+                        </div>
+                        @if (ViewData["Message"] != null)
+                        {
+                            <div class="alert alert-info">
+                                @ViewData["Message"]
+                            </div>
+                        }
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
